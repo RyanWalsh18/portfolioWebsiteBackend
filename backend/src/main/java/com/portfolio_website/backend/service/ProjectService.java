@@ -1,4 +1,4 @@
 package com.portfolio_website.backend.service;
 
-public class CustomerService {
+public class ProjectService {
 }
