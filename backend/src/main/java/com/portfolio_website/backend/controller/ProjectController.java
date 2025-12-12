@@ -50,4 +50,20 @@ public class ProjectController {
         //return HTTP status
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
     }
+
+    // DELETE "/project/{id}"
+    // delete a project
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Project> deleteProjectById(@PathVariable Integer id) {
+        //store result of if the project was deleted
+        boolean deleted = projectService.deleteProject(id);
+
+        if(deleted) {
+            // return 204 No Content to show successful deletion
+            return ResponseEntity.noContent().build();
+        } else{
+            // return 404 Not Found if Project does not exist for deletion
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

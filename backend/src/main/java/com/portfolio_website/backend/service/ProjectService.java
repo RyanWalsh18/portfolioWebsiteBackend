@@ -37,4 +37,19 @@ public class ProjectService {
     public Project createProject(Project project) {
         return projectRepository.save(project);
     }
+
+    // Delete Project
+    //----Arguments----
+    // id (int) -> id of project to be deleted
+    public boolean deleteProject(Integer id) {
+        //check if the project exists
+        if (projectRepository.existsById(id)) {
+            //delete the project
+            projectRepository.deleteById(id);
+            // return true to show the project has been deleted
+            return true;
+        }
+        //return false if the project is not found (therefore not deleted)
+        return false;
+    }
 }
