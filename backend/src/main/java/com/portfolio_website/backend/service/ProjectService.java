@@ -24,10 +24,17 @@ public class ProjectService {
     }
 
     //Return specific Project
-    //----Arguements----
+    //----Arguments----
     // id (Int) -> id of the project to search for
     public Optional<Project> getProjectById(Integer id) {
         Optional<Project> project = projectRepository.findById(id);
         return project;
+    }
+
+    // Create new Project
+    //----Arguments----
+    // project (Project) -> Project to be created
+    public Project createProject(Project project) {
+        return projectRepository.save(project);
     }
 }

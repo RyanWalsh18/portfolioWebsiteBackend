@@ -3,11 +3,9 @@ package com.portfolio_website.backend.controller;
 
 import com.portfolio_website.backend.entity.Project;
 import com.portfolio_website.backend.service.ProjectService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,4 +41,13 @@ public class ProjectController {
                 .orElseGet(() -> ResponseEntity.notFound().build());// HTTP 404
     }
 
+    // POST "/project"
+    // create a new project
+    @PostMapping
+    public ResponseEntity<Project> createProject(@RequestBody Project project) {
+        // Call Service Layer to create new project
+        Project createdProject = projectService.createProject(project);
+        //return HTTP status
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
+    }
 }
