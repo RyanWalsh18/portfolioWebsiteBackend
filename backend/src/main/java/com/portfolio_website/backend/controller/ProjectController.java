@@ -35,9 +35,9 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable Integer id) {
         Optional<Project> project = projectService.getProjectById(id);
-        // Customer found -> return it with HTTP 400
+        // Customer found -> return it with HTTP 200
         // Customer not found -> return HTTP 404 Not Found
-        return project.map(ResponseEntity::ok) //HTTP 400
+        return project.map(ResponseEntity::ok) //HTTP 200
                 .orElseGet(() -> ResponseEntity.notFound().build());// HTTP 404
     }
 
@@ -59,11 +59,28 @@ public class ProjectController {
         boolean deleted = projectService.deleteProject(id);
 
         if(deleted) {
-            // return 204 No Content to show successful deletion
-            return ResponseEntity.noContent().build();
+            // 200 OK to show successful deletion
+            return ResponseEntity.ok().build();
         } else{
-            // return 404 Not Found if Project does not exist for deletion
+            // 404 Not Found if Project does not exist for deletion
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    // PUT "/project/{id}"
+    // update entire Project item
+    @PutMapping("/{id}")
+    public ResponseEntity<Project> updateProject(@PathVariable Integer id, @RequestBody Project updatedProject) {
+        // Try catch to handle IllegalArgumentException from Bad Request
+        try{
+            //call service layer
+            Optional<Project> project = projectService.updateProject(id,updatedProject);
+            return project
+                    .map(ResponseEntity::ok) // 200 OK -> Project updated successfully
+                    .orElseGet(() -> ResponseEntity.notFound().build()); // 404 Not Found -> Project not found to update
+        }
+        catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 }

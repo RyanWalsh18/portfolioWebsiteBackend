@@ -42,6 +42,7 @@ public class ProjectService {
     //----Arguments----
     // id (int) -> id of project to be deleted
     public boolean deleteProject(Integer id) {
+
         //check if the project exists
         if (projectRepository.existsById(id)) {
             //delete the project
@@ -49,7 +50,35 @@ public class ProjectService {
             // return true to show the project has been deleted
             return true;
         }
+
         //return false if the project is not found (therefore not deleted)
         return false;
+    }
+
+    //Update whole Project item
+    //----Arguments----
+    // id (int) -> id of Project to update
+    // updatedProject (Project) -> new details to update the Project item with
+    public Optional<Project> updateProject(Integer id, Project updatedProject) {
+
+        // Check if the Project exists
+        Optional<Project> existingProject = projectRepository.findById(id);
+        if  (existingProject.isEmpty()) {
+            return Optional.empty();
+        }
+
+        // Validate request to ensure that all the fields are present
+        if (updatedProject.getName() == null ||
+            updatedProject.getDescription() == null ||
+            updatedProject.getImageURL() == null){
+            throw new IllegalArgumentException("All fields must be present for a PUT request");
+        }
+
+        // Update the Project with the new details
+        existingProject.get().setName(updatedProject.getName());
+        existingProject.get().setDescription(updatedProject.getDescription());
+        existingProject.get().setImageURL(updatedProject.getImageURL());
+
+        return Optional.of(projectRepository.save(existingProject.get()));
     }
 }
