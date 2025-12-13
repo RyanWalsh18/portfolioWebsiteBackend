@@ -27,8 +27,7 @@ public class ProjectService {
     //----Arguments----
     // id (Int) -> id of the project to search for
     public Optional<Project> getProjectById(Integer id) {
-        Optional<Project> project = projectRepository.findById(id);
-        return project;
+        return projectRepository.findById(id);
     }
 
     // Create new Project
@@ -81,4 +80,39 @@ public class ProjectService {
 
         return Optional.of(projectRepository.save(existingProject.get()));
     }
+
+    // Partially update Project
+    //----Arguments----
+    // id (int) -> id of Project to update
+    // updatedProject (Project) -> new details to update the Project item with
+    public Optional<Project> partiallyUpdateProject(Integer id, Project updatedProject) {
+        // Check if the Project exists
+        Optional<Project> existingProject = projectRepository.findById(id);
+        if  (existingProject.isEmpty()) {
+            return Optional.empty();
+        }
+
+        if (updatedProject.getName() == null &&
+                updatedProject.getDescription() == null &&
+                updatedProject.getImageURL() == null) {
+            throw new IllegalArgumentException("At least one field must be provided");
+        }
+
+
+        // Check if a detail has been provided and update
+        if (updatedProject.getName() != null){
+            existingProject.get().setName(updatedProject.getName());
+        }
+
+        if (updatedProject.getDescription() != null){
+            existingProject.get().setDescription(updatedProject.getDescription());
+        }
+
+        if (updatedProject.getImageURL() != null){
+            existingProject.get().setImageURL(updatedProject.getImageURL());
+        }
+
+        return Optional.of(projectRepository.save(existingProject.get()));
+    }
+
 }

@@ -83,4 +83,22 @@ public class ProjectController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    // PATCH "/project/{id}"
+    // update partile/all of a project
+    @PatchMapping("/{id}")
+    public ResponseEntity<Project> partialUpdateProject(@PathVariable Integer id, @RequestBody Project updatedProject) {
+        // Try catch to handle IllegalArgumentException from Bad Request
+        try{
+            // Call service layer
+            Optional<Project> project = projectService.partiallyUpdateProject(id, updatedProject);
+
+            return project
+                    .map(ResponseEntity::ok) // 200 OK -> Project updated successfully
+                    .orElseGet(() -> ResponseEntity.notFound().build()); // 404 Not Found -> Project not found to update
+        }
+        catch(IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
